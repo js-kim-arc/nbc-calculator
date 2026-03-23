@@ -1,4 +1,6 @@
-package domain;
+package domain.Calculator;
+
+import domain.OperatorType;
 
 import java.util.ArrayList;
 import java.util.Collections;
