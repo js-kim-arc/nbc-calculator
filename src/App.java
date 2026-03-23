@@ -1,4 +1,6 @@
+import domain.ArithmeticCalculator;
 import domain.Calculator;
+import domain.OperatorType;
 
 import java.util.Scanner;
 
@@ -6,7 +8,8 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Calculator calculator = new Calculator();
+        // Calc 변환
+        ArithmeticCalculator calculator = new ArithmeticCalculator();
 
         while (true) {
             System.out.print("첫 번째 숫자를 입력하세요: ");
@@ -16,20 +19,27 @@ public class App {
             int secondNumber = sc.nextInt();
 
             System.out.print("사칙연산 기호를 입력하세요: ");
-            char operator = sc.next().charAt(0);
+            char symbol = sc.next().charAt(0);
+
+            // char → OperatorType 변환
+            OperatorType operator;
+            try {
+                operator = OperatorType.from(symbol);
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                continue;
+            }
 
             try {
                 int result = calculator.calculate(firstNumber, secondNumber, operator);
                 System.out.println("결과: " + result);
-            } catch (ArithmeticException | IllegalArgumentException e) {
+            } catch (ArithmeticException e) {
                 System.out.println(e.getMessage());
                 continue;
             }
 
             System.out.println("저장된 결과 목록: " + calculator.getResults());
 
-            //삭제 로직
-            //예외 로직
             System.out.print("결과를 삭제하시겠습니까? (삭제할 인덱스 입력, 건너뛰려면 no): ");
             String deleteInput = sc.next();
             if (!deleteInput.equals("no")) {
