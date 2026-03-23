@@ -131,7 +131,8 @@ Scanner 입력 → 연산 판단 → 결과 출력의 흐름을 직접 손으로
 ### Story 2. 제네릭을 적용해 피연산자 타입을 유연하게 확장한다
 
 **설명**
-`int` 전용이던 `ArithmeticCalculator`를 제네릭으로 수정해, `Integer`, `Double` 등 다양한 숫자 타입을 피연산자로 받을 수 있도록 확장한다.
+`int` 전용이던 `ArithmeticCalculator`를 제네릭으로 수정해,
+`Integer`, `Double` 등 다양한 숫자 타입을 피연산자로 받을 수 있도록 확장한다.
 `int → double` 단순 교체가 아니라, 호출부가 타입을 결정하는 구조로 전환하는 것이 핵심이다.
 
 **완료 기준**
@@ -156,13 +157,4 @@ Scanner 입력 → 연산 판단 → 결과 출력의 흐름을 직접 손으로
 - [ ] `App`에서 Scanner로 기준값을 입력받아 해당 메서드를 호출하고 결과를 출력한다.
 - [ ] (심화) 아래 추가 조회 메서드 중 하나 이상을 스트림으로 추가 구현한다.
 
-**심화 조회 메서드 예시**
-
-| 메서드 | 설명 |
-|---|---|
-| `getResultsLessThan(T threshold)` | 기준값보다 작은 결과 목록 |
-| `getMaxResult()` | 저장된 결과 중 최댓값 |
-| `getMinResult()` | 저장된 결과 중 최솟값 |
-| `getAverageResult()` | 저장된 결과의 평균 |
-| `getResultsSorted()` | 결과 목록을 오름차순 정렬 |
 
