@@ -94,3 +94,75 @@ Scanner 입력 → 연산 판단 → 결과 출력의 흐름을 직접 손으로
 - [ ] 연산 결과는 `Calculator` 내부 컬렉션 필드에 저장되며, 외부에서 직접 접근할 수 없다. (`private`)
 - [ ] `removeResult()` 메서드를 통해 저장된 결과를 삭제할 수 있다.
 - [ ] 수정 이후에도 Step 1의 반복, 입력, 연산, 예외 처리 동작이 동일하게 동작한다.
+
+-> 도전 기능 가이드 
+# [Epic] Enum, 제네릭, 람다 & 스트림을 도입해 계산기를 확장한다
+
+### 에픽 설명
+절차적 연산자 분기와 정수 전용 연산에서 벗어난 계산기로 리팩토링 
+`OperatorType` Enum으로 연산자를 타입으로 격상하고, 
+제네릭으로 피연산자의 타입 제약을 완화하며, 람다 & 스트림으로 결과 조회를 선언적으로 표현한다. (선언형 프로그래밍)
+
+### 에픽 내부 메모
+- Enum은 단순 상수 묶음이 아니라 "행위를 가진 타입"임을 체험하는 것이 목적
+- 제네릭은 `int → double` 단순 교체가 아니라, 호출부가 타입을 결정하도록 책임을 미루는 개념으로 이해
+- 람다 & 스트림은 "무엇을" 할지 선언하고, "어떻게" 할지는 위임하는 패러다임 전환으로 접근
+
+---
+
+### Story 1. 연산자를 Enum 타입으로 분리하고 ArithmeticCalculator에 적용한다
+
+**설명**
+`char` 타입으로 분기하던 연산자를 `OperatorType` Enum으로 격상한다.
+연산 기호와 연산 행위를 Enum 내부에 캡슐화하고, `ArithmeticCalculator`는 Enum에 연산을 위임한다.
+
+**완료 기준**
+- [ ] `OperatorType` Enum이 `+`, `-`, `*`, `/` 네 가지 연산자를 멤버로 가진다.
+- [ ] 각 Enum 멤버는 자신의 연산 기호(`symbol`)를 필드로 가진다.
+- [ ] 각 Enum 멤버는 두 수를 받아 연산 결과를 반환하는 행위(`apply`)를 직접 구현한다.
+- [ ] `OperatorType.from(char symbol)` 정적 메서드로 기호 → Enum 변환이 가능하다.
+- [ ] 유효하지 않은 기호 입력 시 `IllegalArgumentException`을 던진다.
+- [ ] `ArithmeticCalculator`의 `calculate()` 내부 `switch` 분기가 `OperatorType`으로 대체된다.
+- [ ] `App`은 입력받은 `char`를 `OperatorType.from()`으로 변환해 `calculate()`에 전달한다.
+
+
+---
+
+### Story 2. 제네릭을 적용해 피연산자 타입을 유연하게 확장한다
+
+**설명**
+`int` 전용이던 `ArithmeticCalculator`를 제네릭으로 수정해, `Integer`, `Double` 등 다양한 숫자 타입을 피연산자로 받을 수 있도록 확장한다.
+`int → double` 단순 교체가 아니라, 호출부가 타입을 결정하는 구조로 전환하는 것이 핵심이다.
+
+**완료 기준**
+- [ ] `ArithmeticCalculator`가 타입 파라미터 `<T extends Number>`를 가진 제네릭 클래스로 선언된다.
+- [ ] `calculate()` 메서드가 `T` 타입 피연산자를 받아 `double` 타입으로 연산을 수행한다.
+- [ ] `results` 컬렉션의 타입이 `List<T>`로 변경된다.
+- [ ] `OperatorType`의 `apply()`도 `double` 기반으로 수정된다.
+- [ ] `App`에서 `ArithmeticCalculator<Integer>`, `ArithmeticCalculator<Double>` 둘 다 생성 가능하다.
+- [ ] 기존의 반복, 입력, 예외 처리 동작이 동일하게 유지된다.
+
+---
+
+### Story 3. 람다 & 스트림으로 결과 조회 메서드를 구현한다
+
+**설명**
+`ArithmeticCalculator`에 저장된 연산 결과들을 다양한 조건으로 조회하는 메서드를 람다 & 스트림으로 구현한다.
+입력값보다 큰 결과 조회가 기본 요구사항이며, 추가 조회 조건을 직접 구현해 스트림 학습을 심화한다.
+
+**완료 기준**
+- [ ] `getResultsGreaterThan(T threshold)` 메서드가 입력값보다 큰 결과 목록을 반환한다.
+- [ ] 위 메서드는 반드시 람다 & 스트림(`filter`, `collect`)으로 구현한다.
+- [ ] `App`에서 Scanner로 기준값을 입력받아 해당 메서드를 호출하고 결과를 출력한다.
+- [ ] (심화) 아래 추가 조회 메서드 중 하나 이상을 스트림으로 추가 구현한다.
+
+**심화 조회 메서드 예시**
+
+| 메서드 | 설명 |
+|---|---|
+| `getResultsLessThan(T threshold)` | 기준값보다 작은 결과 목록 |
+| `getMaxResult()` | 저장된 결과 중 최댓값 |
+| `getMinResult()` | 저장된 결과 중 최솟값 |
+| `getAverageResult()` | 저장된 결과의 평균 |
+| `getResultsSorted()` | 결과 목록을 오름차순 정렬 |
+
