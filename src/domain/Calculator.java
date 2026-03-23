@@ -1,6 +1,7 @@
 package domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Calculator {
@@ -26,6 +27,14 @@ public class Calculator {
     }
 
     public List<Integer> getResults() {
-        return results;
+        //안전한 리스트 구현
+        return Collections.unmodifiableList(results);  // 외부에서 직접 수정 불가
+    }
+
+    public void removeResult(int index) {
+        if (index < 0 || index >= results.size()) {
+            throw new IndexOutOfBoundsException("유효하지 않은 인덱스입니다: " + index);
+        }
+        results.remove(index);
     }
 }
