@@ -6,17 +6,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ArithmeticCalculator {
+public class ArithmeticCalculator<T extends Number> {
 
-    private final List<Integer> results = new ArrayList<>();
+    private final List<Double> results = new ArrayList<>();
 
-    public int calculate(int num1, int num2, OperatorType operator) {
-        int result = (int) operator.apply(num1, num2);  // 연산을 Enum에 위임
+    public double calculate(T num1, T num2, OperatorType operator) {
+        double result = operator.apply(num1.doubleValue(), num2.doubleValue());
         results.add(result);
         return result;
     }
 
-    public List<Integer> getResults() {
+    public List<Double> getResults() {
         return Collections.unmodifiableList(results);
     }
 
