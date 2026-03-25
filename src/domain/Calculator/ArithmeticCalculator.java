@@ -2,21 +2,20 @@ package domain.Calculator;
 
 import domain.OperatorType;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class ArithmeticCalculator {
+public class ArithmeticCalculator<T extends Number> {
 
-    private final List<Integer> results = new ArrayList<>();
+    private final List<Double> results = new ArrayList<>();
 
-    public int calculate(int num1, int num2, OperatorType operator) {
-        int result = (int) operator.apply(num1, num2);  // 연산을 Enum에 위임
+    public double calculate(T num1, T num2, OperatorType operator) {
+        double result = operator.apply(num1.doubleValue(), num2.doubleValue());
         results.add(result);
         return result;
     }
 
-    public List<Integer> getResults() {
+    public List<Double> getResults() {
         return Collections.unmodifiableList(results);
     }
 
@@ -26,4 +25,19 @@ public class ArithmeticCalculator {
         }
         results.remove(index);
     }
+
+    // 기본 요구사항 — 기준값보다 큰 결과 목록
+    public List<Double> getResultsGreaterThan(T basis) {
+        return results.stream()
+                      .filter(result -> result > basis.doubleValue())
+                      .collect(Collectors.toList());
+    }
+
+    // 추가 과제 — 기준값보다 작은 결과 목록
+    public List<Double> getResultsLessThan(T basis) {
+        return results.stream()
+                      .filter(result -> result < basis.doubleValue())
+                      .collect(Collectors.toList());
+    }
+
 }
