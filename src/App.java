@@ -2,6 +2,7 @@
 import domain.Calculator.ArithmeticCalculator;
 import domain.OperatorType;
 
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -55,6 +56,8 @@ public class App {
                 continue;
             }
 
+
+            // ── 3. 삭제 ────────────────────────────────────────────────
             System.out.print("결과를 삭제하시겠습니까? (삭제할 인덱스 입력, 건너뛰려면 no): ");
             String deleteInput = sc.next();
             if (!deleteInput.equals("no")) {
@@ -74,7 +77,48 @@ public class App {
                 }
             }
 
-            System.out.print("더 계산하시겠습니까? (exit 입력 시 종료): ");
+            // ── 4. 스트림 조회 ─────────────────────────────────────────
+            System.out.println("\n[조회 메뉴]");
+            System.out.println(" 1. 기준값보다 큰 결과 조회");
+            System.out.println(" 2. 기준값보다 작은 결과 조회");
+            System.out.print("선택 (건너뛰려면 no): ");
+            String queryInput = sc.next();
+
+            //no로 통일하기
+            if (!queryInput.equals("no")) {
+                try {
+                    int queryChoice = Integer.parseInt(queryInput);
+
+                    if (queryChoice == 1 || queryChoice == 2) {
+                        System.out.print("기준값을 입력하세요: ");
+                        String basisInput = sc.next();
+
+                        List<Double> queryResult;
+                        // int , double 나누기
+                        if (isDouble) {
+                            double basis = Double.parseDouble(basisInput);
+                            queryResult = (queryChoice == 1)
+                                    ? doubleCalculator.getResultsGreaterThan(basis)
+                                    : doubleCalculator.getResultsLessThan(basis);
+                        } else {
+                            int basis = Integer.parseInt(basisInput);
+                            queryResult = (queryChoice == 1)
+                                    ? intCalculator.getResultsGreaterThan(basis)
+                                    : intCalculator.getResultsLessThan(basis);
+                        }
+                        System.out.println("조회 결과: " + queryResult);
+
+                    } else {
+                        System.out.println("유효하지 않은 메뉴 번호입니다.");
+                    }
+
+                } catch (NumberFormatException e) {
+                    System.out.println("유효한 숫자 또는 '1'를 입력하세요.");
+                }
+            }
+
+            // ── 5. 종료 판단 ───────────────────────────────────────────
+            System.out.print("\n더 계산하시겠습니까? (exit 입력 시 종료): ");
             if (sc.next().equals("exit")) break;
         }
 

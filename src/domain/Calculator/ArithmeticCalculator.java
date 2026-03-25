@@ -2,9 +2,8 @@ package domain.Calculator;
 
 import domain.OperatorType;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ArithmeticCalculator<T extends Number> {
 
@@ -26,4 +25,19 @@ public class ArithmeticCalculator<T extends Number> {
         }
         results.remove(index);
     }
+
+    // 기본 요구사항 — 기준값보다 큰 결과 목록
+    public List<Double> getResultsGreaterThan(T basis) {
+        return results.stream()
+                      .filter(result -> result > basis.doubleValue())
+                      .collect(Collectors.toList());
+    }
+
+    // 추가 과제 — 기준값보다 작은 결과 목록
+    public List<Double> getResultsLessThan(T basis) {
+        return results.stream()
+                      .filter(result -> result < basis.doubleValue())
+                      .collect(Collectors.toList());
+    }
+
 }
